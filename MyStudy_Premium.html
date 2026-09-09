@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c5ce0">
+<title>MyStudy 🎀</title>
+<style>
+:root{
+  --violet:#7c5ce0; --violet2:#a98cf0; --turq:#8dded8;
+  --ink:#27243a; --muted:#777487; --bg:#faf9ff; --card:#fff;
+  --line:#ebe7f5; --pink:#ffdce9; --danger:#e66b83;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{padding-bottom:86px}
+button,input,select,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.app{max-width:480px;margin:auto;min-height:100vh;background:var(--bg)}
+header{
+  padding:28px 22px 20px;
+  background:linear-gradient(135deg,#f0eaff,#e8fbfa);
+  border-bottom:1px solid var(--line)
+}
+h1{margin:0;font-size:31px;letter-spacing:-1px}
+.subtitle{margin-top:5px;color:#666274;font-weight:600}
+main{padding:18px}
+.screen{display:none}
+.screen.active{display:block}
+.section-title{font-size:25px;margin:8px 0 16px;font-weight:800}
+.hero{
+  background:var(--card);border:1px solid var(--line);border-radius:26px;
+  padding:22px;box-shadow:0 6px 20px rgba(65,46,120,.05);margin-bottom:16px
+}
+.hero small{color:var(--muted);font-weight:700}
+.hero h2{font-size:25px;margin:8px 0 16px}
+.primary{
+  background:var(--violet);color:white;padding:13px 17px;border-radius:15px;font-weight:800
+}
+.secondary{background:#f0edfb;color:var(--violet);padding:12px 15px;border-radius:14px;font-weight:800}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tile{
+  background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;
+  min-height:130px;text-align:left;box-shadow:0 5px 18px rgba(65,46,120,.04)
+}
+.tile:nth-child(odd){background:#f7f2ff}.tile:nth-child(even){background:#effafa}
+.tile .emoji{font-size:25px}.tile b{display:block;font-size:18px;margin-top:8px}.tile span{display:block;color:#777487;margin-top:4px;font-weight:600}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px
+}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.badge{padding:6px 9px;border-radius:10px;background:#f0edfb;color:var(--violet);font-weight:800;font-size:12px}
+.list-empty{text-align:center;color:var(--muted);padding:25px}
+form{display:grid;gap:10px;margin-top:12px}
+input,select,textarea{
+  width:100%;padding:13px;border:1px solid #ddd8eb;border-radius:13px;background:#fff;outline:none;color:var(--ink)
+}
+textarea{min-height:90px;resize:vertical}
+label{font-size:13px;font-weight:800;color:#625d70}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.icon-btn{background:#f3f0fa;color:var(--ink);border-radius:11px;padding:8px 10px;font-weight:800}
+.delete{color:var(--danger)}
+.bottom{
+  position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);
+  padding:7px 6px calc(7px + env(safe-area-inset-bottom));z-index:20
+}
+.navbtn{background:transparent;color:#696575;padding:7px 2px;border-radius:14px;font-weight:800;font-size:11px}
+.navbtn .nemoji{font-size:20px;display:block;margin-bottom:2px}.navbtn.active{background:#f0eaff;color:var(--violet)}
+.stat{font-size:34px;font-weight:900;color:var(--violet)}
+.note{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.note:last-child{border-bottom:0}
+.day-title{font-weight:900;color:var(--violet);margin:18px 0 8px}
+.event{padding:13px;border-left:4px solid var(--violet);background:#faf8ff;border-radius:12px;margin-bottom:8px}
+.event b{display:block}.event small{color:var(--muted)}
+.premium{
+  background:linear-gradient(135deg,#fff1f7,#eee8ff);border:1px solid #eadcf1
+}
+.premium h2{margin:0 0 7px}
+.lock{font-size:30px}
+.feature{padding:10px 0;border-bottom:1px solid rgba(100,70,120,.1);font-weight:700}
+.feature:last-child{border-bottom:0}
+.toast{
+  position:fixed;left:50%;bottom:95px;transform:translateX(-50%);
+  background:#2d2940;color:white;padding:12px 16px;border-radius:14px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:50;font-weight:700;white-space:nowrap
+}
+.toast.show{opacity:1}
+.small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>MyStudy 🎀</h1>
+  <div class="subtitle">Ton espace scolaire, simple et organisé.</div>
+</header>
+
+<main>
+<section id="home" class="screen active">
+  <div class="section-title">Bonjour 👋</div>
+  <div class="hero">
+    <small>Prochain objectif</small>
+    <h2 id="nextGoal">Ajoute ton premier devoir ✨</h2>
+    <button class="primary" onclick="showScreen('homework')">Voir mes devoirs</button>
+  </div>
+  <div class="grid">
+    <button class="tile" onclick="showScreen('planning')"><span class="emoji">📅</span><b>Emploi du temps</b><span>Tes cours</span></button>
+    <button class="tile" onclick="showScreen('grades')"><span class="emoji">📊</span><b>Mes notes</b><span id="homeAverage">Ta moyenne</span></button>
+    <button class="tile" onclick="showScreen('subjects')"><span class="emoji">📚</span><b>Matières</b><span>Tout au même endroit</span></button>
+    <button class="tile" onclick="showScreen('reminders')"><span class="emoji">🔔</span><b>Rappels</b><span id="homeReminders">À venir</span></button>
+  </div>
+  <div class="card premium" style="margin-top:14px">
+    <div class="row"><div><h2>✨ MyStudy Premium</h2><div class="small">Des fonctions en plus pour mieux t'organiser.</div></div><div class="lock">👑</div></div>
+    <div class="actions"><button class="primary" onclick="showScreen('premium')">Découvrir Premium</button></div>
+  </div>
+</section>
+
+<section id="planning" class="screen">
+  <div class="section-title">📅 Emploi du temps</div>
+  <div id="planningList"></div>
+</section>
+
+<section id="homework" class="screen">
+  <div class="section-title">📝 Mes devoirs</div>
+  <div class="card">
+    <b>Ajouter un devoir</b>
+    <form onsubmit="addHomework(event)">
+      <input id="hwSubject" placeholder="Matière (ex. Maths)" required>
+      <input id="hwTitle" placeholder="Devoir à faire" required>
+      <input id="hwDate" type="date" required>
+      <button class="primary">Ajouter le devoir ✨</button>
+    </form>
+  </div>
+  <div id="homeworkList"></div>
+</section>
+
+<section id="subjects" class="screen">
+  <div class="section-title">📚 Matières</div>
+  <div class="card">
+    <form onsubmit="addSubject(event)">
+      <input id="subjectName" placeholder="Nouvelle matière" required>
+      <button class="primary">Ajouter une matière</button>
+    </form>
+  </div>
+  <div id="subjectList"></div>
+</section>
+
+<section id="grades" class="screen">
+  <div class="section-title">📊 Mes notes</div>
+  <div class="hero">
+    <small>Moyenne générale</small>
+    <div class="stat" id="average">—</div>
+    <div class="small">Calculée automatiquement avec tes notes.</div>
+  </div>
+  <div class="card">
+    <b>Ajouter une note</b>
+    <form onsubmit="addGrade(event)">
+      <input id="gradeSubject" placeholder="Matière (ex. Français)" required>
+      <input id="gradeTitle" placeholder="Contrôle / devoir" required>
+      <input id="gradeValue" type="number" min="0" max="20" step="0.5" placeholder="Note sur 20" required>
+      <button class="primary">Ajouter la note</button>
+    </form>
+  </div>
+  <div class="card"><div id="gradeList"></div></div>
+</section>
+
+<section id="reminders" class="screen">
+  <div class="section-title">🔔 Rappels</div>
+  <div class="card">
+    <b>Créer un rappel</b>
+    <form onsubmit="addReminder(event)">
+      <input id="reminderText" placeholder="Ex. Réviser histoire" required>
+      <input id="reminderDate" type="datetime-local" required>
+      <button class="primary">Ajouter le rappel</button>
+    </form>
+  </div>
+  <div id="reminderList"></div>
+</section>
+
+<section id="premium" class="screen">
+  <div class="section-title">👑 Premium</div>
+  <div class="hero premium">
+    <div class="lock">✨👑✨</div>
+    <h2>MyStudy Premium</h2>
+    <p class="small">Une version plus complète de ton espace scolaire.</p>
+    <div class="feature">🎨 Thèmes supplémentaires</div>
+    <div class="feature">📈 Statistiques de notes</div>
+    <div class="feature">⭐ Devoirs et rappels illimités</div>
+    <div class="feature">🏆 Objectifs de révision</div>
+    <div class="feature">☁️ Préparation pour la sauvegarde en ligne</div>
+    <div class="actions">
+      <button class="primary" onclick="togglePremium()" id="premiumBtn">Activer le mode démo Premium</button>
+    </div>
+    <p class="small" id="premiumStatus"></p>
+  </div>
+  <div class="card">
+    <b>Important 💗</b>
+    <p class="small">Le bouton ci-dessus est un mode démo : aucun paiement réel n'est effectué. Pour vendre un vrai abonnement, il faudra ensuite ajouter un système de paiement et un compte utilisateur.</p>
+  </div>
+</section>
+</main>
+
+<nav class="bottom">
+  <button class="navbtn active" data-screen="home" onclick="showScreen('home')"><span class="nemoji">🏠</span>Accueil</button>
+  <button class="navbtn" data-screen="planning" onclick="showScreen('planning')"><span class="nemoji">📅</span>Planning</button>
+  <button class="navbtn" data-screen="homework" onclick="showScreen('homework')"><span class="nemoji">📝</span>Devoirs</button>
+  <button class="navbtn" data-screen="more" onclick="showMore()">•••<br>Plus</button>
+</nav>
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+const defaultPlanning=[
+ ['Lundi','08:00','Maths'],['Lundi','09:00','Français'],['Lundi','10:00','Anglais'],
+ ['Mardi','08:00','Histoire-Géo'],['Mardi','09:00','SVT'],['Mardi','11:00','Maths'],
+ ['Mercredi','09:00','Français'],['Mercredi','10:00','EPS'],
+ ['Jeudi','08:00','Anglais'],['Jeudi','10:00','Physique-Chimie'],
+ ['Vendredi','09:00','Maths'],['Vendredi','11:00','Arts plastiques']
+];
+let homework=JSON.parse(localStorage.getItem('mystudy_homework')||'[]');
+let grades=JSON.parse(localStorage.getItem('mystudy_grades')||'[]');
+let reminders=JSON.parse(localStorage.getItem('mystudy_reminders')||'[]');
+let subjects=JSON.parse(localStorage.getItem('mystudy_subjects')||'["Maths","Français","Anglais","Histoire-Géo","SVT","Physique-Chimie","EPS","Arts plastiques"]');
+let premium=localStorage.getItem('mystudy_premium')==='true';
+
+function save(){localStorage.setItem('mystudy_homework',JSON.stringify(homework));localStorage.setItem('mystudy_grades',JSON.stringify(grades));localStorage.setItem('mystudy_reminders',JSON.stringify(reminders));localStorage.setItem('mystudy_subjects',JSON.stringify(subjects));localStorage.setItem('mystudy_premium',premium)}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+function showScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ const target=document.getElementById(id); if(target) target.classList.add('active');
+ document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+ window.scrollTo({top:0,behavior:'smooth'});
+ renderAll();
+}
+function showMore(){showScreen('premium')}
+function addHomework(e){
+ e.preventDefault();
+ homework.push({id:Date.now(),subject:hwSubject.value.trim(),title:hwTitle.value.trim(),date:hwDate.value,done:false});
+ save();e.target.reset();renderAll();toast('Devoir ajouté ✨');
+}
+function toggleHomework(id){const x=homework.find(h=>h.id===id);if(x)x.done=!x.done;save();renderAll()}
+function deleteHomework(id){homework=homework.filter(h=>h.id!==id);save();renderAll();toast('Devoir supprimé')}
+function addGrade(e){
+ e.preventDefault();
+ grades.push({id:Date.now(),subject:gradeSubject.value.trim(),title:gradeTitle.value.trim(),value:Number(gradeValue.value)});
+ save();e.target.reset();renderAll();toast('Note ajoutée 📊');
+}
+function deleteGrade(id){grades=grades.filter(g=>g.id!==id);save();renderAll()}
+function addReminder(e){
+ e.preventDefault();
+ reminders.push({id:Date.now(),text:reminderText.value.trim(),date:reminderDate.value});
+ save();e.target.reset();renderAll();toast('Rappel créé 🔔');
+}
+function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);save();renderAll()}
+function addSubject(e){
+ e.preventDefault();
+ const v=subjectName.value.trim();if(!v)return;
+ if(!subjects.includes(v))subjects.push(v);save();e.target.reset();renderAll();toast('Matière ajoutée 📚');
+}
+function deleteSubject(s){subjects=subjects.filter(x=>x!==s);save();renderAll()}
+function togglePremium(){premium=!premium;save();renderAll();toast(premium?'Premium activé 👑':'Mode Premium désactivé')}
+function formatDate(d){if(!d)return '';const [y,m,day]=d.split('-');return `${day}/${m}/${y}`}
+function renderPlanning(){
+ let out='';let current='';
+ defaultPlanning.forEach(x=>{
+  if(x[0]!==current){current=x[0];out+=`<div class="day-title">${x[0]}</div>`}
+  out+=`<div class="event"><b>${x[1]} · ${x[2]}</b><small>Cours prévu</small></div>`;
+ });
+ planningList.innerHTML=out;
+}
+function renderHomework(){
+ if(!homework.length){homeworkList.innerHTML='<div class="card list-empty">Aucun devoir pour le moment 🌸<br>Ajoute ton premier devoir juste au-dessus !</div>';nextGoal.textContent='Ajoute ton premier devoir ✨';return}
+ homework.sort((a,b)=>a.date.localeCompare(b.date));
+ const next=homework.find(h=>!h.done);
+ nextGoal.textContent=next?`${next.subject} · ${next.title}`:'Tous tes devoirs sont terminés 🎉';
+ homeworkList.innerHTML=homework.map(h=>`<div class="card"><div class="row"><div><span class="badge">${h.subject}</span><h3 style="margin:9px 0 4px;${h.done?'text-decoration:line-through;opacity:.55':''}">${h.title}</h3><div class="small">À faire pour le ${formatDate(h.date)}</div></div><button class="icon-btn ${h.done?'':'delete'}" onclick="toggleHomework(${h.id})">${h.done?'↩️':'✓'}</button></div><div class="actions"><button class="icon-btn delete" onclick="deleteHomework(${h.id})">Supprimer</button></div></div>`).join('');
+}
+function renderSubjects(){
+ subjectList.innerHTML=subjects.map(s=>`<div class="card"><div class="row"><b>📚 ${s}</b><button class="icon-btn delete" onclick="deleteSubject(${JSON.stringify(s)})">Supprimer</button></div></div>`).join('');
+}
+function renderGrades(){
+ const avg=grades.length?grades.reduce((a,g)=>a+g.value,0)/grades.length:null;
+ average.textContent=avg===null?'—':avg.toFixed(2).replace('.',',')+'/20';
+ homeAverage.textContent=avg===null?'Ta moyenne':`Moyenne ${avg.toFixed(2).replace('.',',')}/20`;
+ gradeList.innerHTML=grades.length?grades.slice().reverse().map(g=>`<div class="note"><div><b>${g.subject}</b><div class="small">${g.title}</div></div><b>${g.value}/20</b></div>`).join(''):'<div class="list-empty">Aucune note pour le moment 📚</div>';
+}
+function renderReminders(){
+ reminders.sort((a,b)=>a.date.localeCompare(b.date));
+ homeReminders.textContent=reminders.length?`${reminders.length} rappel${reminders.length>1?'s':''}`:'À venir';
+ reminderList.innerHTML=reminders.length?reminders.map(r=>`<div class="card"><div class="row"><div><b>🔔 ${r.text}</b><div class="small">${new Date(r.date).toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'})}</div></div><button class="icon-btn delete" onclick="deleteReminder(${r.id})">Supprimer</button></div></div>`).join(''):'<div class="card list-empty">Aucun rappel 🌷</div>';
+}
+function renderPremium(){
+ premiumStatus.textContent=premium?'👑 Mode Premium actif sur cet appareil.':'Le mode Premium est actuellement désactivé.';
+ premiumBtn.textContent=premium?'Désactiver le mode démo Premium':'Activer le mode démo Premium';
+}
+function renderAll(){renderPlanning();renderHomework();renderSubjects();renderGrades();renderReminders();renderPremium()}
+renderAll();
+</script>
+</body>
+</html>
